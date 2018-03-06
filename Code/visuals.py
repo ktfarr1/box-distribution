@@ -1,5 +1,6 @@
 import numpy as np
 import weightedstats as ws
+import pandas as pd
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -63,29 +64,15 @@ joinedBox = sortByEV(box,weight)
 print("Percentage of boxes under the median Cost: {}".format(np.sum(joinedBox[:8,1])/100))
 print("Percentage of boxes with Cost >= 109.99: {}".format(np.sum(joined[-16:,1])/100))
 
-# boxes = np.asarray(['Name'])
-# for b in np.arange(weight.size):
-# 	temp = (np.tile(humanreadable[b],(weight[b],1)))
-# 	boxes = np.vstack((boxes,temp))
-
-# sample = (np.random.choice(np.concatenate(boxes[1:]), size=49,replace=False))
-# index = np.where(humanreadable == sample[0])[0][0]
-# indices = [np.where(humanreadable == sample[i])[0][0] for i in np.arange(49)]
-# sample_table = (np.hstack((np.reshape(humanreadable[indices],(49,1)),
-# 				np.reshape(ev[indices],(49,1)),
-# 				np.reshape(box[indices],(49,1)),
-# 				np.reshape(weight[indices]/100,(49,1)))))
 sample_table = returnSample(13)
-# print(sample_table[:,0])
 print(sample_table[sample_table[:,1].astype(np.float).argsort()])
 print(np.mean(sample_table[:,1].astype(np.float)),np.median(sample_table[:,1].astype(np.float)))
-# print(np.arange(1,101,3).shape)
+
 labels = np.asarray(["People","Mean of Means","Median of Means","Standard Deviation of Means",
 					"Mean of Medians","Median of Medians","Standard Deviation of Medians"])
 result = np.zeros((1,7))
-# print(result)
-#34 rows containing [mean mean, median mean, std mean, mean median, median median, std median]
 
+#34 rows containing [mean mean, median mean, std mean, mean median, median median, std median]
 for n in np.arange(1,101,3):
 	row = np.empty((100,2))
 
@@ -104,19 +91,25 @@ def plot_data(result):
 # plt.scatter(result[1:,0],result[1:,1], label='Mean of Means', color='k', s=25, marker='o')
 plt.scatter(result[1:,0],result[1:,2],label='Median of Means', color='r', s=25, marker='*')
 yerror = result[1:,3].astype(np.float)*0.1
-plt.errorbar(result[1:,0],result[1:,1],yerr=yerror,label="Median Error")
+plt.errorbar(result[1:,0],result[1:,1],yerr=yerror,label="Mean Error")
+plt.xlabel('People')
+plt.xticks(np.arange(1,101,9))
+plt.ylabel('Dollars')
+plt.yticks(np.arange(55,115,5))
+plt.title('Means')
+plt.legend()
+plt.show()
 
-'''
+
 # plt.scatter(result[1:,0],result[1:,4],label='Mean of Medians', color='r', s=25, marker='o')
 plt.scatter(result[1:,0],result[1:,5],label='Median of Medians', color='r', s=25, marker='*')
 yerror = result[1:,6].astype(np.float)*0.1
 # print(result[1:,0].dtype, result[1:,1].dtype, yerror.dtype)
 plt.errorbar(result[1:,0],result[1:,4],yerr=yerror,label="Median Error")
-'''
 plt.xlabel('People')
 plt.xticks(np.arange(1,101,9))
 plt.ylabel('Dollars')
-plt.yticks(np.arange(55,86,3))
+plt.yticks(np.arange(55,115,5))
 plt.title('Medians')
 plt.legend()
 plt.show()
